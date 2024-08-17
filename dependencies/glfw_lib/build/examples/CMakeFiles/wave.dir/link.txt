@@ -1,0 +1,1 @@
+/usr/sbin/cc CMakeFiles/wave.dir/wave.c.o -o wave  -Wl,-rpath,/home/hinpa/GameEngine2/dependencies/glfw_lib/build/src ../src/libglfw.so.3.5 /mnt/c/msys64/mingw64/lib/libm.a
