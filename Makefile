@@ -3,7 +3,7 @@ CC=clang -v
 
 # Dependencies flags for .h files (to make make recompile the project when .h was changed)
 DEPFLAGS=-MP -MD
-LFLAGS=-L./complib/ -lglfw -lGLEW -lerrh -lGL -lstdc++ -lm 
+LFLAGS=-Wl,-rpath,./complib,-L,./complib/ -lglfw -lGLEW -lerrh -lGL -lstdc++ -lm 
 EFLAGS=-std=c++20 #-fsanitize=address -Wall -Wextra 
 CFLAGS=-I./include/ -g -O0 $(EFLAGS) $(DEPFLAGS)
 SRCS=src

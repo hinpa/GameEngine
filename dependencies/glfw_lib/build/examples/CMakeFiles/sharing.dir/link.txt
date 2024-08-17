@@ -1,1 +1,0 @@
-/usr/sbin/cc CMakeFiles/sharing.dir/sharing.c.o -o sharing  -Wl,-rpath,/home/hinpa/GameEngine2/dependencies/glfw_lib/build/src ../src/libglfw.so.3.5 /mnt/c/msys64/mingw64/lib/libm.a

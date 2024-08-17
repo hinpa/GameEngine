@@ -1,1 +1,0 @@
-/usr/sbin/cc CMakeFiles/glfwinfo.dir/glfwinfo.c.o CMakeFiles/glfwinfo.dir/__/deps/getopt.c.o -o glfwinfo  -Wl,-rpath,/home/hinpa/GameEngine2/dependencies/glfw_lib/build/src ../src/libglfw.so.3.5 /mnt/c/msys64/mingw64/lib/libm.a

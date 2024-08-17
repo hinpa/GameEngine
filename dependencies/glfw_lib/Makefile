@@ -1,5 +1,4 @@
 proc=$(shell nproc)
-options=$(shell echo 'BUILD_SHARED_LIBS=ON')
 
 
 all:
