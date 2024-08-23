@@ -1,6 +1,5 @@
-#include <GLFW/glfw3.h>
-#include <string>
 #include "err_handler.h"
+#include <string>
 
 
 void glfwError(int id, const char* description)

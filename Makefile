@@ -42,6 +42,8 @@ clean:
 
 clean_libs:
 	$(foreach D, $(LIBS), cd $(D) && make clean; cd ../..;)
+	rm -rf ./complib/*
+	rm -rf ./include/*
 
 full_clean:
 	make clean_libs
