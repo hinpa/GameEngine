@@ -1,0 +1,6 @@
+[submodule "dependencies/glew_lib/glew"]
+	path = dependencies/glew_lib/glew
+	url = https://www.github.com/nigels-com/glew
+[submodule "dependencies/glfw_lib/glfw"]
+	path = dependencies/glfw_lib/glfw
+	url = https://www.github.com/glfw/glfw
