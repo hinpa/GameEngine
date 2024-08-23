@@ -24,6 +24,7 @@ regular_compile:
 	@make all -j12
 
 compile_libraries:
+	mkdir -p ./complib
 	$(foreach D, $(LIBS), cd $(D) && make; cd ../..;)
 
 all:$(BINARY)
