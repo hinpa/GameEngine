@@ -1,5 +1,10 @@
 CC=clang
 
+SYSTEM=linux
+
+ifeq ($(SYSTEM), linux-mingw64)
+	CC=x86_64-w64-mingw32-gcc -v
+endif
 
 # Dependencies flags for .h files (to make make recompile the project when .h was changed)
 DEPFLAGS=-MP -MD

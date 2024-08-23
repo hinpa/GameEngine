@@ -1,10 +1,31 @@
 CC=clang -v
 
+# System dependent
+
+SYSTEM=linux
+GLEW_LIB_NAME=GLEW
+GLFW_LIB_NAME=glfw
+MESA_LIB_NAME=GL
+
+ifeq ($(SYSTEM), linux-mingw64)
+	GLEW_LIB_NAME=glew32
+	GLFW_LIB_NAME=glfw3
+	MESA_LIB_NAME=opengl32
+	CC=x86_64-w64-mingw32-gcc
+endif
+	
+ifeq ($(SYSTEM), windows)
+	GLEW_LIB_NAME=glew32
+	GLFW_LIB_NAME=glfw3
+	MESA_LIB_NAME=opengl32
+	CC=gcc
+endif
+
 
 # Dependencies flags for .h files (to make make recompile the project when .h was changed)
 DEPFLAGS=-MP -MD
-LFLAGS=-Wl,-rpath,./complib,-L,./complib/ -lglfw -lGLEW -lerrh -lGL -lstdc++ -lm 
-EFLAGS=-std=c++20 #-fsanitize=address -Wall -Wextra 
+LFLAGS=-Wl,-rpath,./complib,-L,./complib/ -l$(GLFW_LIB_NAME) -l$(GLEW_LIB_NAME) -l$(MESA_LIB_NAME) -lerrh -lstdc++ -lm 
+EFLAGS=-std=c++20 -Wall -Wextra 
 CFLAGS=-I./include/ -g -O0 $(EFLAGS) $(DEPFLAGS)
 SRCS=src
 CODEDIRS=. $(SRCS) $(foreach D,$(SRCS), $(wildcard $(D)/*))
@@ -25,7 +46,7 @@ regular_compile:
 
 compile_libraries:
 	mkdir -p ./complib
-	$(foreach D, $(LIBS), cd $(D) && make; cd ../..;)
+	$(foreach D, $(LIBS), cd $(D) && make SYSTEM=$(SYSTEM); cd ../..;)
 
 all:$(BINARY)
 
@@ -39,7 +60,7 @@ $(BINARY):$(OBJECTS)
 	$(CC) $(LFLAGS) $(CFLAGS) -c $< -o $@
 
 clean:
-	rm -rf $(OBJECTS) $(BINARY) $(DEPFILES) compile_commands.json .cache
+	rm -rf $(OBJECTS) $(BINARY)* $(DEPFILES) compile_commands.json .cache
 
 clean_libs:
 	$(foreach D, $(LIBS), cd $(D) && make clean; cd ../..;)
