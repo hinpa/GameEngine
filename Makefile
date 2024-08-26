@@ -7,20 +7,6 @@ GLEW_LIB_NAME=GLEW
 GLFW_LIB_NAME=glfw
 MESA_LIB_NAME=GL
 
-ifeq ($(SYSTEM), linux-mingw64)
-	GLEW_LIB_NAME=glew32
-	GLFW_LIB_NAME=glfw3
-	MESA_LIB_NAME=opengl32
-	CC=x86_64-w64-mingw32-gcc
-endif
-	
-ifeq ($(SYSTEM), windows)
-	GLEW_LIB_NAME=glew32
-	GLFW_LIB_NAME=glfw3
-	MESA_LIB_NAME=opengl32
-	CC=gcc
-endif
-
 
 # Dependencies flags for .h files (to make make recompile the project when .h was changed)
 DEPFLAGS=-MP -MD
@@ -34,6 +20,22 @@ CFILES=$(foreach D,$(CODEDIRS),$(wildcard $(D)/*.cpp))
 OBJECTS=$(patsubst %.cpp,%.o,$(CFILES))
 DEPFILES=$(patsubst %.cpp,%.d,$(CFILES))
 BINARY=bin
+
+ifeq ($(SYSTEM), linux-mingw64)
+	GLEW_LIB_NAME=glew32
+	GLFW_LIB_NAME=glfw3
+	MESA_LIB_NAME=opengl32
+	CC=x86_64-w64-mingw32-gcc
+	LFLAGS:=$(LFLAGS) -static-libstdc++ 
+endif
+	
+ifeq ($(SYSTEM), windows)
+	GLEW_LIB_NAME=glew32
+	GLFW_LIB_NAME=glfw3
+	MESA_LIB_NAME=opengl32
+	CC=gcc
+endif
+
 
 
 compile_commands:
@@ -65,7 +67,7 @@ clean:
 clean_libs:
 	$(foreach D, $(LIBS), cd $(D) && make clean; cd ../..;)
 	rm -rf ./complib/*
-	rm -rf ./include/*
+	rm -rf ./include/GL ./include/GLFW
 
 full_clean:
 	make clean_libs
