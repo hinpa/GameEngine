@@ -7,10 +7,16 @@ GLEW_LIB_NAME=GLEW
 GLFW_LIB_NAME=glfw
 MESA_LIB_NAME=GL
 
+#windows specific
+
+GDI_LIB_LINK=
+
+CXX_LIB_LINK=-lstdc++
+
 
 # Dependencies flags for .h files (to make make recompile the project when .h was changed)
 DEPFLAGS=-MP -MD
-LFLAGS=-Wl,-rpath,./complib,-L,./complib/ -l$(GLFW_LIB_NAME) -l$(GLEW_LIB_NAME) -l$(MESA_LIB_NAME) -lerrh -lstdc++ -lm 
+LFLAGS=
 EFLAGS=-std=c++20 -Wall -Wextra 
 CFLAGS=-I./include/ -g -O0 $(EFLAGS) $(DEPFLAGS)
 SRCS=src
@@ -25,18 +31,15 @@ ifeq ($(SYSTEM), linux-mingw64)
 	GLEW_LIB_NAME=glew32
 	GLFW_LIB_NAME=glfw3
 	MESA_LIB_NAME=opengl32
-	CC=x86_64-w64-mingw32-gcc
-	LFLAGS:=$(LFLAGS) -static-libstdc++ 
+	GDI_LIB_LINK=-lgdi32
+	CXX_LIB_LINK=-Wl,-Bstatic -lstdc++
+	CC=x86_64-w64-mingw32-gcc -v
+	LFLAGS:=-L./complib
+else
+	LFLAGS:=-Wl,-rpath,./complib,-L,./complib/ $(LFLAGS)
 endif
 	
-ifeq ($(SYSTEM), windows)
-	GLEW_LIB_NAME=glew32
-	GLFW_LIB_NAME=glfw3
-	MESA_LIB_NAME=opengl32
-	CC=gcc
-endif
-
-
+LFLAGS:= $(LFLAGS) -l$(GLFW_LIB_NAME) -l$(GLEW_LIB_NAME) -l$(MESA_LIB_NAME) $(CXX_LIB_LINK) -lm $(GDI_LIB_LINK) -lerrh 
 
 compile_commands:
 	@make compile_libraries
@@ -59,7 +62,7 @@ $(BINARY):$(OBJECTS)
 -include $(DEPFILES)
 
 %.o:%.cpp Makefile
-	$(CC) $(LFLAGS) $(CFLAGS) -c $< -o $@
+	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
 	rm -rf $(OBJECTS) $(BINARY)* $(DEPFILES) compile_commands.json .cache
