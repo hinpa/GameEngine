@@ -33,7 +33,7 @@ ifeq ($(SYSTEM), linux-mingw64)
 	MESA_LIB_NAME=opengl32
 	GDI_LIB_LINK=-lgdi32
 	CXX_LIB_LINK=-Wl,-Bstatic -lstdc++
-	CC=x86_64-w64-mingw32-gcc -v
+	CC=x86_64-w64-mingw32-gcc
 	LFLAGS:=-L./complib
 else
 	LFLAGS:=-Wl,-rpath,./complib,-L,./complib/ $(LFLAGS)
@@ -44,6 +44,13 @@ LFLAGS:= $(LFLAGS) -l$(GLFW_LIB_NAME) -l$(GLEW_LIB_NAME) -l$(MESA_LIB_NAME) $(CX
 compile_commands:
 	@make compile_libraries
 	@bear -- make all -j12
+
+release:
+	@make compile_commands
+	mkdir -p release
+	cp -r $(BINARY)* res release
+	zip -r release.zip release/
+
 
 regular_compile:
 	@make compile_libraries
@@ -65,12 +72,12 @@ $(BINARY):$(OBJECTS)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	rm -rf $(OBJECTS) $(BINARY)* $(DEPFILES) compile_commands.json .cache
+	rm -rf $(OBJECTS) $(BINARY)* $(DEPFILES) compile_commands.json .cache release*
 
 clean_libs:
 	$(foreach D, $(LIBS), cd $(D) && make clean; cd ../..;)
 	rm -rf ./complib/*
-	rm -rf ./include/GL ./include/GLFW
+	rm -rf ./include/*
 
 full_clean:
 	make clean_libs
